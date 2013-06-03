@@ -223,6 +223,19 @@ class GDC {
 		return $this->_get( $r->body->identifiers[0]->uri )->body;
 	}
 
+	# Get number of columns for dataset SLI load
+	# Param: identifier string
+	# Return: integer
+	public function get_num_columns_sli( $dataset ) {
+		$store = $this->templates[$this->project][$dataset];
+
+		if( !isset( $store ) ) {
+			throw new Exception( 'Call read_sli_template method first' );
+		}
+
+		return count( $store['csv'] );
+	}
+
 	# Prepare ZIP file for dataset load
 	# Params: identifier string, array of arrays (table)
 	# Return: zip archive filename
