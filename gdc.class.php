@@ -196,6 +196,25 @@ class GDC {
 		return $store;
 	}
 
+	# Set dataset SLI mode to INCREMENTAL
+	# Param: identifier string
+	# Return: array - dataset store structure
+	public function set_sli_incremental( $dataset ) {
+		$store = $this->templates[$this->project][$dataset];
+
+		if( !isset( $store ) ) {
+			throw new Exception( 'Call read_sli_template method first' );
+		}
+
+		foreach( $store['info']->dataSetSLIManifest->parts as $col ) {
+			$col->mode = 'INCREMENTAL';
+		}
+
+		$this->templates[$this->project][$dataset] = $store;
+
+		return $store;
+	}
+
 	# GET object definition and meta
 	# Param: identifier string
 	# Return: object
