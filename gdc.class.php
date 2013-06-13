@@ -339,6 +339,38 @@ class GdcDataset {
 		return $columns;
 	}
 
+	# Set date format constraint to a column
+	# Params: string column name, string date format optional
+	# Return: boolean, TRUE on success
+	public function set_column_date_format( $column, $format = 'yyyy-MM-dd' ) {
+		$this->check_read_template();
+
+		foreach( $this->sli['info']->dataSetSLIManifest->parts as $col ) {
+			if( $column == $col->columnName ) {
+				$col->constraints->date = $format;
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+	# Set date format constraints to all columns of type day.
+	# Param: string date format optional
+	# Return: integer number of rows affected
+	public function auto_set_date_format( $format = 'yyyy-MM-dd' ) {
+		$this->check_read_template();
+		$cnt = 0;
+
+		foreach( $this->sli['csv'] as $name => $col ) {
+			if( preg_match( '/^GDC\.time\.day.*/', $col['type'] ) ) {
+				$cnt += (int) $this->set_column_date_format( $name, $format );
+			}
+		}
+
+		return $cnt;
+	}
+
 	# Set dataset SLI mode to INCREMENTAL
 	# Return: boolean
 	public function set_sli_incremental() {
@@ -426,10 +458,11 @@ class GdcDataset {
 		foreach( $this->sli['info']->dataSetSLIManifest->parts as $column ) {
 			$obj = array_values( get_object_vars( $this->gdc->get_object( $column->populates[0] ) ) );
 			$this->sli['csv'][$column->columnName] = array(
-				'title' => $obj[0]->meta->title,
-				'uri' => $obj[0]->meta->uri,
-				'category' => $obj[0]->meta->category,
-				'identifier' => $obj[0]->meta->identifier
+				'title'      => $obj[0]->meta->title,
+				'uri'        => $obj[0]->meta->uri,
+				'category'   => $obj[0]->meta->category,
+				'identifier' => $obj[0]->meta->identifier,
+				'type'       => ( property_exists( $obj[0]->content, 'type' ) ? $obj[0]->content->type : '' )
 			);
 		}
 
