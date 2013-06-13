@@ -328,6 +328,17 @@ class GdcDataset {
 		return count( $this->sli['csv'] );
 	}
 
+	# Get list of CSV column names
+	# Return: array
+	public function get_columns_sli() {
+		$this->check_read_template();
+
+		$columns = array_keys( $this->sli['csv'] );
+		sort( $columns, SORT_STRING );
+
+		return $columns;
+	}
+
 	# Set dataset SLI mode to INCREMENTAL
 	# Return: boolean
 	public function set_sli_incremental() {
@@ -421,6 +432,7 @@ class GdcDataset {
 				'identifier' => $obj[0]->meta->identifier
 			);
 		}
+
 		return TRUE;
 	}
 
@@ -430,7 +442,7 @@ class GdcDataset {
 	protected function data_to_csv( $data ) {
 		$numcols = $this->get_num_columns_sli();
 		$i = 1; $e = 0;
-		$csv = implode( ',', array_keys( $this->sli['csv'] ) );
+		$csv = implode( ',', $this->get_columns_sli() );
 
 		foreach( $data as $row ) {
 			if( count( $row ) == $numcols ) {
