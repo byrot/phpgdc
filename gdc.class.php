@@ -323,9 +323,7 @@ class GdcDataset {
 	# Get number of columns for dataset SLI load
 	# Return: integer
 	public function get_num_columns_sli() {
-		if( !isset( $this->sli ) ) {
-			throw new Exception( 'Call read_sli_template method first' );
-		}
+		$this->check_read_template();
 
 		return count( $this->sli['csv'] );
 	}
@@ -333,9 +331,7 @@ class GdcDataset {
 	# Set dataset SLI mode to INCREMENTAL
 	# Return: boolean
 	public function set_sli_incremental() {
-		if( !isset( $this->sli ) ) {
-			throw new Exception( 'Call read_sli_template method first' );
-		}
+		$this->check_read_template();
 
 		foreach( $this->sli['info']->dataSetSLIManifest->parts as $col ) {
 			$col->mode = 'INCREMENTAL';
@@ -348,9 +344,7 @@ class GdcDataset {
 	# Params: identifier string, array of arrays (table)
 	# Return: zip archive filename
 	public function prepare_load( $data ) {
-		if( !isset( $this->sli ) ) {
-			throw new Exception( 'Call read_sli_template method first' );
-		}
+		$this->check_read_template();
 
 		$fn  = $this->sli['template'] . '.data.zip';
 		$this->gdc->debug( "FILE $fn" );
@@ -385,6 +379,15 @@ class GdcDataset {
 		} else {
 			return FALSE;
 		}
+	}
+	
+	# Check if the template has been read, and throw an exception if not.
+	# Return: boolean
+	protected function check_read_template() {
+		if( !isset( $this->sli ) ) {
+			throw new Exception( 'Call read_sli_template method first' );
+		}
+		return TRUE;
 	}
 
 	# Download SLI dataset template
