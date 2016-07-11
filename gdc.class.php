@@ -35,7 +35,7 @@ class GDC {
 	const GDC_API_LOGIN     = '/gdc/account/login';
 	const GDC_API_TOKEN     = '/gdc/account/token';
 	const GDC_API_MD        = '/gdc/md';
-	const GDC_API_ETL       = '/gdc/md/<project>/etl/pull';
+	const GDC_API_ETL       = '/gdc/md/<project>/etl/pull2';
 	const GDC_API_DATASETS  = '/gdc/md/<project>/data/sets';
 	const GDC_API_SLI       = '/gdc/md/<project>/ldm/singleloadinterface';
 	const GDC_API_ID_TO_URI = '/gdc/md/<project>/identifiers';
